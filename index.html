@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clicker Game</title>
+    <style>
+      /* Stylowanie ciała strony */
+      body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Ustawienie wysokości na 100% widocznego obszaru */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            animation: backgroundChange 10s infinite alternate; /* Animacja zmieniająca tło */
+        }
+        @keyframes backgroundChange {
+            0% {
+                background-color: #ff0000; /* Kolor na początku (koraloowy) */
+            }
+            20% {
+                background-color: #d3ff11; /* Kolor na początku (koraloowy) */
+            }
+            40% {
+                background-color: #87ebc5; /* Jasnoniebieski */
+            }
+            60% {
+                background-color: #00ffbf; /* Jasnozielony */
+            }
+            80% {
+                background-color: #ff00ea; /* Czerwony */
+            }
+            100% {
+                background-color: #ff0000; /* Fioletowy */
+            }
+        }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f3f3f3;
+            margin: 0;
+            padding: 0;
+        }
+        #gameContainer {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .button {
+            font-size: 25px;
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 100000px;
+            cursor: pointer;
+            transition: background-color 0.1s ease;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .button:active {
+            background-color: #3e8e41;
+        }
+        #score {
+            font-size: 40px;
+            margin: 20px 0;
+        }
+        #upgradeButton {
+            margin-top: 20px;
+            background-color: #008CBA;
+        }
+        #clickerUpgrade {
+            margin-top: 20px;
+            background-color: #f39c12;
+        }
+        .status {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="gameContainer">
+    <h1>Clicker Game</h1>
+    <div id="score">Punkty: 0</div>
+    <button class="button" id="clickButton">Kliknij!</button>
+    <button class="button" id="upgradeButton">Kup ulepszenie (+1 do kliknięcia) - 10 punktów</button>
+    <button class="button" id="clickerUpgrade">Kup automatyczny klikacz (+1 punkt na sekundę) - 100 punktów</button>
+    <div id="status" class="status">Automatyczny klikacz: 0 punktów/s</div>
+    <div id="upgradeStatus" class="status">Ulepszenia klikacza: 0</div>
+</div>
+
+<script>
+    // Zmienna przechowująca aktualny wynik
+    let score = localStorage.getItem('score') ? parseInt(localStorage.getItem('score')) : 0;
+    let clickUpgradeLevel = localStorage.getItem('clickUpgradeLevel') ? parseInt(localStorage.getItem('clickUpgradeLevel')) : 0;
+    let autoClickers = localStorage.getItem('autoClickers') ? parseInt(localStorage.getItem('autoClickers')) : 0;
+    let autoClickerRate = 0;
+
+    const scoreElement = document.getElementById('score');
+    const clickButton = document.getElementById('clickButton');
+    const upgradeButton = document.getElementById('upgradeButton');
+    const clickerUpgradeButton = document.getElementById('clickerUpgrade');
+    const statusElement = document.getElementById('status');
+    const upgradeStatusElement = document.getElementById('upgradeStatus');
+
+    // Funkcja aktualizująca wynik na stronie
+    function updateScore() {
+        scoreElement.innerText = `Punkty: ${score}`;
+        localStorage.setItem('score', score);
+    }
+
+    // Funkcja kupująca ulepszenie klikacza
+    function buyClickUpgrade() {
+        if (score >= 10) {
+            score -= 10;
+            clickUpgradeLevel++;
+            localStorage.setItem('clickUpgradeLevel', clickUpgradeLevel);
+            upgradeStatusElement.innerText = `Ulepszenia klikacza: ${clickUpgradeLevel}`;
+            updateScore();
+        }
+    }
+
+    // Funkcja kupująca automatycznego klikacza
+    function buyAutoClicker() {
+        if (score >= 100) {
+            score -= 100;
+            autoClickers++;
+            localStorage.setItem('autoClickers', autoClickers);
+            updateScore();
+            updateAutoClickerStatus();
+        }
+    }
+
+    // Funkcja aktualizująca status automatycznych klikaczy
+    function updateAutoClickerStatus() {
+        autoClickerRate = autoClickers; // Każdy klikacz dodaje 1 punkt na sekundę
+        statusElement.innerText = `Automatyczny klikacz: ${autoClickerRate} punktów/s`;
+    }
+
+    // Funkcja zwiększająca punkty po kliknięciu
+    clickButton.addEventListener('click', () => {
+        score += (1 + clickUpgradeLevel); // Dodajemy punkty, uwzględniając ulepszenie klikacza
+        updateScore();
+    });
+
+    // Funkcja uruchamiająca ulepszenie klikacza
+    upgradeButton.addEventListener('click', () => {
+        buyClickUpgrade();
+    });
+
+    // Funkcja uruchamiająca zakup automatycznego klikacza
+    clickerUpgradeButton.addEventListener('click', () => {
+        buyAutoClicker();
+    });
+
+    // Funkcja automatycznie dodająca punkty co sekundę
+    setInterval(() => {
+        score += autoClickerRate; // Dodajemy punkty zgodnie z liczbą automatycznych klikaczy
+        updateScore();
+    }, 1000);
+
+    // Początkowa aktualizacja
+    updateAutoClickerStatus();
+    updateScore();
+</script>
+
+</body>
+</html>
