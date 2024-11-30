@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>zgadnij liczbe</title>
+    <style>
+
+        @keyframes gradient {
+            0% { background-color: #ff3300; }
+            25% { background-color: #7bfe9c; }
+            50% { background-color: #ff9900; }
+            75% { background-color: #5f6aff; }
+            100% { background-color: #e100ff; }
+        }
+
+        body {
+            animation: gradient 10s ease infinite; /* Infinite animation with a duration of 5 seconds */
+            color: rgb(4, 26, 97); /* Change text color for better contrast */
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 500px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 350px;
+            margin-left: 750p;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        #result {
+            margin-top: 500px;
+            font-size: 40px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+    <h1>Guess the Number Game</h1>
+    <p>I'm thinking of a number between 1 and 100000.</p>
+    <input type="number" id="guess" placeholder="Enter your guess" />
+    <button onclick="checkGuess()">Submit Guess</button>
+    <div id="result"></div>
+    <h2>tekst</h2>
+    <script>
+        let randomNumber = Math.floor(Math.random() * 100000) + 1;
+        let attempts = 0;
+
+        function checkGuess() {
+            const userGuess = Number(document.getElementById('guess').value);
+            attempts++;
+            const resultDiv = document.getElementById('result');
+
+            if (userGuess === randomNumber) {
+                resultDiv.innerHTML = `Congratulations! You guessed the number ${randomNumber} in ${attempts} attempts.`;
+            } else if (userGuess < randomNumber) {
+                resultDiv.innerHTML = 'Too low! Try again.';
+            } else {
+                resultDiv.innerHTML = 'zbyt wysokie!';
+            }
+        }
+
+
+        
+    </script>
+    
+</body>
+</html>
